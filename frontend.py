@@ -19,16 +19,7 @@ def get_data(id=None):
     print(data)
 
 
-# get_data()
-
-
-def post_data():
-    data = {
-        "name": "Syed",
-        "city": "Bang",
-        "roll": 5,
-    }
-
+def post_data(data):
     # py dict to JSON
     json_data = json.dumps(data)
     r = requests.post(url=URL, data=json_data)
@@ -37,13 +28,10 @@ def post_data():
     print(data)
 
 
-# post_data()
-
-
 def update_data():
     data = {
-        "id": 4,
-        "name": "Kapil",
+        "id": 5,
+        "name": "Haseeb",
         "city": "Bangalore",
     }
 
@@ -55,12 +43,9 @@ def update_data():
     print(data)
 
 
-# update_data()
-
-
 def delete_data():
     data = {
-        "id": 3,
+        "id": 6,
     }
 
     # py dict to JSON
@@ -71,4 +56,16 @@ def delete_data():
     print(data)
 
 
-delete_data()
+data = {
+    "name": "kapil",
+    "city": "bengaluru",
+    "roll": 10,
+}
+
+# get_data()
+post_data(data)
+# update_data()
+# delete_data()
+
+
+# get_data()
