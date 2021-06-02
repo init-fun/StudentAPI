@@ -1,15 +1,16 @@
 from django.http.multipartparser import BoundaryIter
 from django.shortcuts import render
 import io
-import requests
 from rest_framework import serializers
 from rest_framework.parsers import JSONParser
 from .serializers import StudentSerializer
 from rest_framework.renderers import JSONRenderer
 from django.http import HttpResponse
 from .models import Student
+from django.views.decorators.csrf import csrf_exempt
 
 
+@csrf_exempt
 def student_api(request):
     if request.method == "GET":
         json_data = request.body
@@ -34,3 +35,22 @@ def student_api(request):
         serializer = StudentSerializer(stu, many=True)
         json_data = JSONRenderer().render(serializer.data)
         return HttpResponse(json_data, content_type="application/json")
+
+    if request.method == "POST":
+        # get the json body
+        json_body = request.body
+        # convert the json stream
+        json_stream = io.BytesIO(json_body)
+        # convert to python native data type
+        python_data = JSONParser().parse(json_stream)
+
+        # convert to complex data obj
+        serializer = StudentSerializer(data=python_data)
+        if serializer.is_valid():
+            serializer.save()
+            res = {"msg": "Data saved successfully!"}
+            json_msg = JSONRenderer().render(res)
+            return HttpResponse(json_msg, content_type="application/json")
+
+        json_msg = JSONRenderer().render(serializer.errors)
+        return HttpResponse(json_msg, content_type="application/json")
